@@ -64,6 +64,23 @@ class Solution : Solver {
         List<(long, long)> dedupedIngredientRanges = DeDupeRanges(freshIngredientRanges);
         return CountUniqueIngredientIds(dedupedIngredientRanges);
     }
+    
+    public object AltPartTwo(string input) {
+        return input.Split("\n\n")[0]
+            .Split("\n")
+            .Where(line => line.Contains("-"))
+            .Select(line => line.Split("-"))
+            .Select(parts => (Start: long.Parse(parts[0]), End: long.Parse(parts[1])))
+            .OrderBy(range => range.Start)
+            .Aggregate(
+                new List<(long Start, long End)>(),
+                (merged, range) => {
+                    if (merged.Count == 0 || range.Start > merged[^1].End + 1) merged.Add(range);
+                    else merged[^1] = (merged[^1].Start, Math.Max(merged[^1].End, range.End));
+                    return merged;
+                })
+            .Sum(range => range.End - range.Start + 1);
+    }
 
     private List<(long, long)> GetFreshIngredientRangesList(string input) {
         List<(long, long)> freshIngredientRanges = new();
@@ -107,7 +124,7 @@ class Solution : Solver {
         }
         return inputRanges;
     }
-    
+
     private long CountUniqueIngredientIds(List<(long, long)> ranges) {
         long count = 0;
 
