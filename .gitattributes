@@ -1,1 +1,2 @@
 **/input.in  filter=git-crypt diff=git-crypt
+**/input_final.in  filter=git-crypt diff=git-crypt
